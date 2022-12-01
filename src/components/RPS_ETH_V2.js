@@ -4,20 +4,12 @@ import { Injected } from './wallet/Connectors';
 import { useWeb3React } from '@web3-react/core';
 import '../abi.js';
 
-//used in this blog post: 
-//https://medium.com/@websculpt/rock-paper-scissors-in-solidity-part-3-commit-reveal-4d56a84cbe97
 export default function RPSETH_v2() {
 
-    // active:      Is there a wallet connected?
-    // account:     Address 
-    // library:     Web3 (or, ethers if that's what you used)
-    // connector:   'Injected' connector
-    // activate:    Method to connect to wallet
-    // deactivate:  Method to disconnect from wallet
-    const { active, account, library, connector, activate, deactivate } = useWeb3React();
+    const { active, account, library, activate, deactivate } = useWeb3React();
 
     //instance of the Smart Contract
-    const [contractInstance, setContractInstance] = useState(null);
+    const [contractInstance, setContractInstance] = useState('');
 
     //text-boxes
     const [etherAmount, setEtherAmount] = useState('');
@@ -26,7 +18,7 @@ export default function RPSETH_v2() {
     const [contractBalance, setContractBalance] = useState('');
 
     //player values
-    const [playerOneOpponentAddress, setPlayerOneOpponentAddress] = useState('0x496...');
+    const [playerOneOpponentAddress, setPlayerOneOpponentAddress] = useState('');
     const [playerTwoOpponentAddress, setPlayerTwoOpponentAddress] = useState('');
     const [playerOneSalt, setPlayerOneSalt] = useState('');
     const [playerTwoSalt, setPlayerTwoSalt] = useState('');
@@ -43,20 +35,19 @@ export default function RPSETH_v2() {
         if(library != null) {
             initContractInstance();
             console.log('useEffect() initialized the contract instance');
+            async function initContractInstance() {        
+                var ci = await new library.eth.Contract( window.rpsv2_abi , '0x4968012edcB9Cd490582684CE76718d222085bC9');
+                setContractInstance(ci);
+                console.log("User interacted with OSFD: Rock Paper Scissors smart contract...");
+            }
         } else {
-            console.log('library is null...');
+            console.log('[WAIT] Connect to OSFD network...');
         }
     }, [library]);
     
-    async function initContractInstance() {        
-        var ci = new library.eth.Contract( window.rpsv2_abi , '0xa5...');
-        setContractInstance(ci);
-        console.log("init contract instance...");
-    }
-
     async function connectToMetaMask() {
         try {
-            activate(Injected); //calls the activate method provided by useWeb3React()
+            await activate(Injected); //calls the activate method provided by useWeb3React()
         } catch (ex) {
             console.log(ex);
         }
@@ -69,7 +60,6 @@ export default function RPSETH_v2() {
             console.log(ex);
         }
     }
-
 
     //view data for testing
     async function getMsgSender() {  
@@ -110,7 +100,8 @@ export default function RPSETH_v2() {
 
     //Rock, Paper, Scissors - Play Game
     async function startGame(choiceSelected) {
-        if(library === undefined) {
+        // eslint-disable-next-line
+        if(library == undefined) {
             alert('Please connect to metamask...');
         }
         else {
@@ -122,14 +113,16 @@ export default function RPSETH_v2() {
             let hash = library.utils.sha3(encoded, {encoding: 'hex'});
             setPlayerOneSalt(salt);
 
-            console.log('Player one salt: ', salt);
-            console.log('Player one hash: ', hash);
+            // console.log('Player one salt: ', salt);// Only for testing - remove 
+            // console.log('Player one hash: ', hash);// Only for testing - remove 
 
             setPlayerTwoOpponentAddress(account);
-
+            
+            // eslint-disable-next-line
             if (hash !== undefined && hash !== null) {
-                var bet = library.utils.toWei(library.utils.toBN('1'), 'ether');
+                var bet = library.utils.toWei(library.utils.toBN('1'), 'ether');// hardcoded to 1 ether - could be changed to exact deposit amount in future
                 
+                // notes: Can we send this transaction to the blockchain in a later function call, i.e "revealChoice"
                 await contractInstance.methods.startGame(hash, playerOneOpponentAddress, bet).send({ from: account }).then(function(receipt){
                     console.log('receipt from startGame _> status: ' + receipt.status + ', gas: ' + receipt.gasUsed);
                 }).catch(err => console.log(err)); 
@@ -137,7 +130,8 @@ export default function RPSETH_v2() {
         }
     }
     async function participateGame(choiceSelected) {
-        if(library === undefined) {
+        // eslint-disable-next-line
+        if(library == undefined) {
             alert('Please connect to metamask...');
         }
         else {
@@ -149,8 +143,8 @@ export default function RPSETH_v2() {
             let hash = library.utils.sha3(encoded, {encoding: 'hex'});
             setPlayerTwoSalt(salt);
 
-            console.log('Player two salt: ', salt);
-            console.log('Player two hash: ', hash);
+            // console.log('Player two salt: ', salt);// Only for testing - remove 
+            // console.log('Player two hash: ', hash);// Only for testing - remove 
 
             await contractInstance.methods.participateGame(hash, playerTwoOpponentAddress).send({ from: account }).then(function(receipt){
                 console.log('receipt from participateGame _> status: ' + receipt.status + ', gas: ' + receipt.gasUsed);
@@ -172,19 +166,27 @@ export default function RPSETH_v2() {
     async function endGame() {
         await contractInstance.methods.endGame(playerTwoOpponentAddress).send({ from: account }).then(function(receipt){
             console.log('receipt from endGame _> status: ' + receipt.status + ', gas: ' + receipt.gasUsed);
-            let rpsOutCome = receipt.events.GetGameOutcome.returnValues[0]; // read the event fired by the contract
-
-            if(rpsOutCome == 0) {
-                setGameOutcome('It is a draw');
-            } else if(rpsOutCome == 1) {
-                setGameOutcome('Player One Wins');
-            } else if(rpsOutCome == 2) {
-                setGameOutcome('Player Two Wins');
-            } else {
-                setGameOutcome('Problem with game');
+            let rpsOutCome = receipt.events.GetGameOutcome.returnValues[0];
+            console.log('Player ' + rpsOutCome, 'Won!'); // read the event (uint) fired by the contract
+            switch (rpsOutCome) {
+                case '0':
+                  setGameOutcome('IT IS A DRAW!🤝')
+                  break
+                case '1':
+                  setGameOutcome('PLAYER ONE WINS!', console.log('🤑Player One can withdraw the Jackpot!!'))
+                  break
+                case '2':
+                  setGameOutcome('PLAYER TWO WINS!', console.log('🤑Player Two can withdraw the Jackpot!!'))
+                  break
+                case '3':
+                    setGameOutcome('🚨...there was a problem with this game')
+                    break
+                default: 
+                    setGameOutcome('🙌...Play again!'); // 
+                    break    
             }
-
-            console.log('outcome from contract: ', rpsOutCome);
+            setPlayerOneChoice(playerOneChoice);
+            setPlayerTwoChoice(playerTwoChoice);
         }).catch(err => console.log(err)); 
     }
     async function viewGame() {
@@ -196,9 +198,10 @@ export default function RPSETH_v2() {
         <Container>
             <Row className='mt-5'>
                 <Col className='text-center'>
-                    <h1>Uses RPSv2 Smart Contract</h1>
-                    <h3>start by connecting a test wallet</h3>
-                    <h4>deposit as a player, and start playing</h4>
+                    <h1>Rock Paper Scissors - (securely)</h1>
+                    <h3>Start by connecting your wallet</h3>
+                    <h4>Deposit & Play - then Player Two may enter!</h4>
+                    <h5>End Game and Winner Takes All💰</h5>
                 </Col>    
             </Row> 
             <Row className='mt-5'>
@@ -274,7 +277,7 @@ export default function RPSETH_v2() {
             <Row className='mt-5'>
                 <Col className='text-center'>
                     <h1>
-                        Rock, Paper, Scissors
+                        Rock Paper Scissors
                     </h1>
                 </Col>
             </Row>

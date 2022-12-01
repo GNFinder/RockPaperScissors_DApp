@@ -6,10 +6,10 @@ const About = () => {
             <Row className='mt-5'>
                 <Col className='text-center'>
                     <h1>
-                        About
+                        OSFD Intern - Rock Paper Scisscors Game
                     </h1>
                     <h4>
-                        More info coming soon ... check out the Build Notes to learn more about how to create a React App
+                        More info coming soon ... check out the Build Notes to learn more about how to create our Rock Paper Scissors DApp
                     </h4>
                 </Col>
             </Row>

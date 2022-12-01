@@ -7,7 +7,7 @@ const Home = () => {
             <Row>
                 <Col className='text-center'>
                     <h1>
-                        Home
+                        Welcome
                     </h1>
                 </Col>
             </Row> 
@@ -19,22 +19,28 @@ const Home = () => {
             <Row>
                 <Col className='text-center'>
                     <h2>
-                        React examples ...
+                        OSFD Intern DAO ...
                     </h2>
                 </Col>
             </Row> 
             <Row>
                 <Col className='text-center'>
                     <h3>
-                        with Solidity and Blockchain examples to come
+                        <Col className='text-center'>
+                        <a 
+                        href='/rps-ethereum-v2' 
+                        target='RPSETH_v2'>
+                            Rock Paper Scissors Game
+                        </a>
+                        </Col>
                     </h3>
                 </Col>
             </Row> 
             <Row>
                 <Col className='text-center'>
                     <a 
-                    href='https://github.com/nathan-websculpt/reactsolidity_frontend'
-                    target='_blank'>
+                    href='https://github.com/GNFinder'
+                    target='_blank' rel="noreferrer">
                         View the GitHub
                     </a>
                 </Col>
@@ -42,8 +48,8 @@ const Home = () => {
             <Row>
                 <Col className='text-center'>
                     <a 
-                    href='https://twitter.com/sculpt_web'
-                    target='_blank'>
+                    href='https://twitter.com/JamalForbes_'
+                    target='_blank' rel="noreferrer">
                         View the Twitter
                     </a>
                 </Col>
@@ -51,8 +57,8 @@ const Home = () => {
             <Row>
                 <Col className='text-center'>
                     <a 
-                    href='https://medium.com/@websculpt'
-                    target='_blank'>
+                    href='https://www.notion.so/Rock-Paper-Scissors-The-Cool-Way-7330e28b8dc64fc0b5bc967911b5d93b'
+                    target='_blank' rel="noreferrer">
                         View the Blog
                     </a>
                 </Col>

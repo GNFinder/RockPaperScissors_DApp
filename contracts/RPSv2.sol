@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0
+//@authors: JamalForbes_
+/*@note: This is a work in progress version with the game using
+ the following OSFD contract to make 'secure' commits and reveal changes 
+*/
 
-pragma solidity ^0.8.0;
-import "../node_modules/@OpenZeppelin/contracts/utils/math/SafeMath.sol";
+pragma solidity ^0.8.17;
+
 import "../node_modules/@OpenZeppelin/contracts/security/ReentrancyGuard.sol";
 
-//for use in this blog post: https://medium.com/@websculpt/rock-paper-scissors-in-solidity-part-3-commit-reveal-4d56a84cbe97
 contract RPSv2 is ReentrancyGuard {
-    using SafeMath for uint;
+
+    address public owner;
 
     event GetGameOutcome(GameOutcome);
 
@@ -39,13 +43,13 @@ contract RPSv2 is ReentrancyGuard {
     mapping (address => uint) public playerBalances;
 
 	//Start
-    function startGame(bytes32 gameHash, address opponent, uint gameStake) external {
+    function startGame(bytes32 gameHash, address opponent, uint gameStake) external { //@audit: why does this function cost so much gas?
         require(gameHash != "", "gameHash not provided");
         require(opponent != address(0x0) && opponent != msg.sender, "Problem with other player...");
         require(games[msg.sender].status == GameStatus.nonExistent, "Old game/No game");
         require(gameStake <= playerBalances[msg.sender], "Players funds are insufficient");
 
-        playerBalances[msg.sender] = playerBalances[msg.sender].sub(gameStake);
+        playerBalances[msg.sender] = playerBalances[msg.sender]-(gameStake);
         
         games[msg.sender].playerOneHash = gameHash;
         games[msg.sender].playerOne = msg.sender;
@@ -64,7 +68,7 @@ contract RPSv2 is ReentrancyGuard {
         uint gameStake = games[opponent].stake;
         require(gameStake <= playerBalances[msg.sender], "Player funds are insufficient");
 
-        playerBalances[msg.sender] = playerBalances[msg.sender].sub(gameStake);
+        playerBalances[msg.sender] = playerBalances[msg.sender]-(gameStake);
 
         games[opponent].playerTwoHash = gameHash;
         games[opponent].status = GameStatus.participated;
@@ -77,7 +81,7 @@ contract RPSv2 is ReentrancyGuard {
         if(games[playerOne].playerOne == msg.sender) {
             require(games[playerOne].playerOneHash == getSaltedHash(choice, salt), "problem with salt");
             games[playerOne].playerOneChoice = choice;
-        } else if(games[playerOne].playerTwo == msg.sender) {
+        } else if(games[playerOne].playerTwo == msg.sender) {//@audit: why is player 2 gas cost greater?
             require(games[playerOne].playerTwoHash == getSaltedHash(choice, salt), "problem with salt");
             games[playerOne].playerTwoChoice = choice;
         } else {
@@ -86,7 +90,6 @@ contract RPSv2 is ReentrancyGuard {
     }
     
     function endGame(address playerOne) external returns(GameOutcome gameResult) {
-        //can we finish the game?
         require(
           games[playerOne].playerOneChoice > 0 &&
           games[playerOne].playerTwoChoice > 0 ,
@@ -98,26 +101,25 @@ contract RPSv2 is ReentrancyGuard {
         uint playerTwoChoice = games[playerOne].playerTwoChoice;
         uint stake = games[playerOne].stake;
 
-        //winning player: (3 + playerOneChoice - playerTwoChoice) % 3
-        gameResult = GameOutcome((uint(3).add(uint(playerOneChoice)).sub(uint(playerTwoChoice))).mod(3));
+        gameResult = GameOutcome((uint(3)+(uint(playerOneChoice))-(uint(playerTwoChoice)))%(3));
 
         if(gameResult == GameOutcome.draw){
-            playerBalances[playerOne] = playerBalances[playerOne].add(stake);
-            playerBalances[playerTwo] = playerBalances[playerTwo].add(stake);
+            playerBalances[playerOne] = playerBalances[playerOne]+(stake);
+            playerBalances[playerTwo] = playerBalances[playerTwo]+(stake);
         }
         else if(gameResult == GameOutcome.playerOne){
-            playerBalances[playerOne] = playerBalances[playerOne].add(stake.mul(2));
+            playerBalances[playerOne] = playerBalances[playerOne]+(stake*(2));
         }
         else if(gameResult == GameOutcome.playerTwo){
-            playerBalances[playerTwo] = playerBalances[playerTwo].add(stake.mul(2));
+            playerBalances[playerTwo] = playerBalances[playerTwo]+(stake*(2));
         }
         else{
             revert("Invalid Game Outcome");
         }
 
-        //use these lines and comment out deleteGame() to view a completed game in console
-        //games[playerOne].outcome = gameResult;
-        //games[playerOne].status = GameStatus.ended;
+        //@dev: Use these lines and comment out deleteGame() to view a completed game in console
+        games[playerOne].outcome = gameResult;
+        games[playerOne].status = GameStatus.ended;
         deleteGame(playerOne);
 
         emit GetGameOutcome(gameResult);
@@ -130,22 +132,12 @@ contract RPSv2 is ReentrancyGuard {
    
     function deleteGame(address playerOne) internal {
         delete games[playerOne];
-
         //the game disappears after being played, so if you want to leave data behind for testing, you can just delete certain pieces of data
-        // delete games[playerOne].playerOne;
-        // delete games[playerOne].playerTwo;
-        // delete games[playerOne].stake;
-        // delete games[playerOne].playerOneChoice;
-        // delete games[playerOne].playerTwoChoice;
-        // delete games[playerOne].playerOneHash;
-        // delete games[playerOne].playerTwoHash;
-        // delete games[playerOne].status;
-        // delete games[playerOne].outcome;
     }
 
     //deposit a player's funds
     function deposit() external payable {
-        playerBalances[msg.sender] = playerBalances[msg.sender].add(msg.value);
+        playerBalances[msg.sender] = playerBalances[msg.sender]+(msg.value);
     }
     
     //withdraw a player's funds

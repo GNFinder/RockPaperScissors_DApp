@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Injected } from './wallet/Connectors';
 import { useWeb3React } from '@web3-react/core';

@@ -5,8 +5,6 @@ import { useWeb3React } from '@web3-react/core';
 import '../abi.js';
 
 //not usable on mainnet, as the front-end values can be manipulated prior to calling the smart contract
-//used in this blog post: 
-//https://medium.com/@websculpt/rock-paper-scissors-in-solidity-part-2-web3-and-the-browser-79df179e8cd
 export default function RPSETH_simple() {
 
     // active:      Is there a wallet connected?
@@ -43,8 +41,10 @@ export default function RPSETH_simple() {
         }
     }, [library]);
     
+    /* For changing the migrated contract address - left out of tutorial
+    Migration details found in addresses.txt */
     async function initContractInstance() {        
-        var ci = new library.eth.Contract( window.rpsv1_abi , '0xCf945Bee50d91f38E01912231Aba13A0bD7505A9');
+        var ci = new library.eth.Contract( window.rpsv2_abi , '0x0A83028d55002D26D62856F306D1d0bf284faA5B');
         setContractInstance(ci);
     }
 

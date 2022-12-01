@@ -6,7 +6,8 @@ const BuildNotes = () => {
             <h1 className='build-note-title mt-5'>Build Notes</h1>
             <hr />
             <h4 className='build-note-section-title'>Round 1</h4>
-            <ul>
+            <h5>coming soon ... </h5>
+            {/* <ul>
                 <li>
                     <p className='build-note-item'>
                         NOTE: Already had node.js installed - you need to be able to run <i>npm</i> and <i>npx</i> commands
@@ -47,11 +48,12 @@ const BuildNotes = () => {
                         Build (adds a build folder, necessary for deploying): <i>npm run build</i>
                     </p>
                 </li>                
-            </ul>
+            </ul> */}
 
             
             <h4 className='build-note-section-title'>Round 2</h4>
-            <ul>
+            <h5>coming soon ... </h5>
+            {/* <ul>
                 <li>
                     <p className='build-note-item'>
                         NOTE: Deployed, but Netlify was treating common warnings as errors which I learned after making first update
@@ -81,10 +83,11 @@ const BuildNotes = () => {
                         ...more notes on the router, switch, and nav later...
                     </p>
                 </li>
-            </ul>
+            </ul> */}
 
             <h4 className='build-note-section-title'>Round 3</h4>
-            <ul>
+            <h5>coming soon ... </h5>
+            {/* <ul>
                 <li>
                     <p className='build-note-item'>
                         NOTE: to display bootstrap in HTML vs. React Bootstrap, you can view these commits
@@ -101,7 +104,7 @@ const BuildNotes = () => {
                 <li>
                     Note: it is at this point I was making some design decisions and package choices for how I will later display code snippets (for the tutorial aspects of this site)
                 </li>
-            </ul>
+            </ul> */}
             
             <h4 className='build-note-section-title'>Rock, Paper, Scissors game added</h4>
             <ul>
@@ -118,7 +121,8 @@ const BuildNotes = () => {
             </ul>
             
             <h4 className='build-note-section-title'>Rock, Paper, Scissors Ethereum Game (starting)</h4>
-            <ul>
+            <h5>coming soon ... </h5>
+            {/* <ul>
                 <li>
                     <p className='build-note-item'>
                         NOTE: starting with the basics like the Web3 Provider and a MetaMask login
@@ -198,7 +202,7 @@ const BuildNotes = () => {
                         </li>
                     </ul>
                 </li>
-            </ul>
+            </ul> */}
         </Container>
     )
 }
