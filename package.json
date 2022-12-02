@@ -1,6 +1,7 @@
 {
-  "name": "reactsolidity_frontend",
-  "version": "0.1.0",
+  "homepage": "http://GNFinder.github.io/RockPaperScissors_DApp",
+  "name": "RockPaperScissors_DApp",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "@metamask/detect-provider": "^2.0.0",
@@ -22,6 +23,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -45,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^4.0.0",
     "truffle-plugin-verify": "^0.6.1"
   }
 }
