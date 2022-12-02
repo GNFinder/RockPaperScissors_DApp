@@ -1,6 +1,6 @@
 {
   "homepage": "http://GNFinder.github.io/RockPaperScissors_DApp",
-  "name": "RockPaperScissors_DApp",
+  "name": "rock_paper_scissors_dapp",
   "version": "0.3.0",
   "private": true,
   "dependencies": {
