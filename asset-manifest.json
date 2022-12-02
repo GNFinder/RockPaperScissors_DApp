@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/RockPaperScissors_DApp/static/css/main.9b73a97d.chunk.css",
+    "main.js": "/RockPaperScissors_DApp/static/js/main.2e228767.chunk.js",
+    "main.js.map": "/RockPaperScissors_DApp/static/js/main.2e228767.chunk.js.map",
+    "runtime-main.js": "/RockPaperScissors_DApp/static/js/runtime-main.8ea76b02.js",
+    "runtime-main.js.map": "/RockPaperScissors_DApp/static/js/runtime-main.8ea76b02.js.map",
+    "static/css/2.b8e408b6.chunk.css": "/RockPaperScissors_DApp/static/css/2.b8e408b6.chunk.css",
+    "static/js/2.72b8deb5.chunk.js": "/RockPaperScissors_DApp/static/js/2.72b8deb5.chunk.js",
+    "static/js/2.72b8deb5.chunk.js.map": "/RockPaperScissors_DApp/static/js/2.72b8deb5.chunk.js.map",
+    "static/js/3.745b9efe.chunk.js": "/RockPaperScissors_DApp/static/js/3.745b9efe.chunk.js",
+    "static/js/3.745b9efe.chunk.js.map": "/RockPaperScissors_DApp/static/js/3.745b9efe.chunk.js.map",
+    "index.html": "/RockPaperScissors_DApp/index.html",
+    "static/css/2.b8e408b6.chunk.css.map": "/RockPaperScissors_DApp/static/css/2.b8e408b6.chunk.css.map",
+    "static/css/main.9b73a97d.chunk.css.map": "/RockPaperScissors_DApp/static/css/main.9b73a97d.chunk.css.map",
+    "static/js/2.72b8deb5.chunk.js.LICENSE.txt": "/RockPaperScissors_DApp/static/js/2.72b8deb5.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/RockPaperScissors_DApp/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8ea76b02.js",
+    "static/css/2.b8e408b6.chunk.css",
+    "static/js/2.72b8deb5.chunk.js",
+    "static/css/main.9b73a97d.chunk.css",
+    "static/js/main.2e228767.chunk.js"
+  ]
+}
